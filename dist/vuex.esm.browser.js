@@ -384,6 +384,7 @@ class Store {
     this._subscribers.forEach(sub => sub(mutation, this.state));
 
     if (
+      
       options && options.silent
     ) {
       console.warn(
@@ -581,6 +582,9 @@ function installModule (store, rootState, path, module, hot) {
 
   // register in namespace map
   if (module.namespaced) {
+    if (store._modulesNamespaceMap[namespace] && "development" !== 'production') {
+      console.error(`[vuex] duplicate namespace ${namespace} for the namespaced module ${path.join('/')}`);
+    }
     store._modulesNamespaceMap[namespace] = module;
   }
 
@@ -631,7 +635,7 @@ function makeLocalContext (store, namespace, path) {
 
       if (!options || !options.root) {
         type = namespace + type;
-        if (!store._actions[type]) {
+        if ( !store._actions[type]) {
           console.error(`[vuex] unknown local action type: ${args.type}, global type: ${type}`);
           return
         }
@@ -647,7 +651,7 @@ function makeLocalContext (store, namespace, path) {
 
       if (!options || !options.root) {
         type = namespace + type;
-        if (!store._mutations[type]) {
+        if ( !store._mutations[type]) {
           console.error(`[vuex] unknown local mutation type: ${args.type}, global type: ${type}`);
           return
         }
@@ -858,7 +862,7 @@ const mapGetters = normalizeNamespace((namespace, getters) => {
       if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
         return
       }
-      if (!(val in this.$store.getters)) {
+      if ( !(val in this.$store.getters)) {
         console.error(`[vuex] unknown getter: ${val}`);
         return
       }
@@ -948,7 +952,7 @@ function normalizeNamespace (fn) {
  */
 function getModuleByNamespace (store, helper, namespace) {
   const module = store._modulesNamespaceMap[namespace];
-  if (!module) {
+  if ( !module) {
     console.error(`[vuex] module namespace not found in ${helper}(): ${namespace}`);
   }
   return module
@@ -966,4 +970,4 @@ var index_esm = {
 };
 
 export default index_esm;
-export { Store, install, mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers };
+export { Store, createNamespacedHelpers, install, mapActions, mapGetters, mapMutations, mapState };

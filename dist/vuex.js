@@ -400,6 +400,7 @@
     this._subscribers.forEach(function (sub) { return sub(mutation, this$1.state); });
 
     if (
+      
       options && options.silent
     ) {
       console.warn(
@@ -607,6 +608,9 @@
 
     // register in namespace map
     if (module.namespaced) {
+      if (store._modulesNamespaceMap[namespace] && "development" !== 'production') {
+        console.error(("[vuex] duplicate namespace " + namespace + " for the namespaced module " + (path.join('/'))));
+      }
       store._modulesNamespaceMap[namespace] = module;
     }
 
@@ -658,7 +662,7 @@
 
         if (!options || !options.root) {
           type = namespace + type;
-          if (!store._actions[type]) {
+          if ( !store._actions[type]) {
             console.error(("[vuex] unknown local action type: " + (args.type) + ", global type: " + type));
             return
           }
@@ -675,7 +679,7 @@
 
         if (!options || !options.root) {
           type = namespace + type;
-          if (!store._mutations[type]) {
+          if ( !store._mutations[type]) {
             console.error(("[vuex] unknown local mutation type: " + (args.type) + ", global type: " + type));
             return
           }
@@ -898,7 +902,7 @@
         if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
           return
         }
-        if (!(val in this.$store.getters)) {
+        if ( !(val in this.$store.getters)) {
           console.error(("[vuex] unknown getter: " + val));
           return
         }
@@ -994,7 +998,7 @@
    */
   function getModuleByNamespace (store, helper, namespace) {
     var module = store._modulesNamespaceMap[namespace];
-    if (!module) {
+    if ( !module) {
       console.error(("[vuex] module namespace not found in " + helper + "(): " + namespace));
     }
     return module
